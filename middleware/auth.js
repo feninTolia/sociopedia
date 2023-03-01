@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = async (req, res, next) => {
+  console.log('in verifyToken middleware');
   try {
     let token = req.header('Authorization');
     if (!token) {
@@ -8,7 +9,7 @@ export const verifyToken = async (req, res, next) => {
     }
 
     if (token.startsWith('Bearer ')) {
-      token.slice(7, token.length).trimLeft();
+      token = token.slice(7, token.length).trimLeft();
     }
 
     const verified = jwt.verify(token, process.env.JWT_SECRET);

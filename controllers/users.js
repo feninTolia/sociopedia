@@ -2,6 +2,7 @@ import User from '../models/User.js';
 
 // READ
 export const getUser = async (req, res) => {
+  console.log('in get user controller');
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -42,16 +43,22 @@ export const getUserFriends = async (req, res) => {
 export const addRemoveFriend = async (req, res) => {
   try {
     const { id, friendId } = req.params;
+    if (id === friendId) return res.status(202);
+
     const user = await User.findById(id);
     const friend = await User.findById(friendId);
 
     if (user.friends.includes(friendId)) {
-      user.friends.filter((id) => id !== friendId);
-      friend.friends.filter((ID) => ID !== id);
+      user.friends = user.friends.filter((id) => id !== friendId);
+      friend.friends = friend.friends.filter((ID) => ID !== id);
     } else {
       user.friends.push(friendId);
       friend.friends.push(id);
     }
+
+    console.log(`user--------`, user);
+    console.log(`friend--------`, friend);
+
     await user.save();
     await friend.save();
 
