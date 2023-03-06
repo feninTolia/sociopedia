@@ -16,7 +16,6 @@ import { createPost } from './controllers/posts.js';
 import { verifyToken } from './middleware/auth.js';
 
 // Configurations
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
@@ -55,7 +54,7 @@ app.use('/posts', postRoutes);
 
 //mongoose setup
 const PORT = process.env.PORT || 6001;
-console.log('process.env.MONGO_URL--------', process.env.MONGO_URL);
+
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,

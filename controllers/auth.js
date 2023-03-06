@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import cloudinary from '../utils/cloudinary.js';
 
 // register user
 
@@ -17,15 +18,24 @@ export const register = async (req, res) => {
       occupation,
     } = req.body;
 
+    console.log('occupation===========', occupation);
+
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
-    console.log(`passwordHash---------`, passwordHash);
+
+    const result = await cloudinary.uploader.upload(
+      `public/assets/${picturePath}`,
+      {
+        folder: 'posts',
+      }
+    );
+
     const newUser = new User({
       firstName,
       lastName,
       email,
       password: passwordHash,
-      picturePath,
+      picturePath: result.secure_url,
       friends,
       location,
       occupation,
@@ -33,7 +43,6 @@ export const register = async (req, res) => {
       impressions: Math.floor(Math.random() * 10000),
     });
     const savedUser = await newUser.save();
-    console.log(`savedUser--------`, savedUser);
     res.status(201).json(savedUser);
   } catch (e) {
     res.status(500).json({ error: e.message });

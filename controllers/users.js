@@ -2,7 +2,6 @@ import User from '../models/User.js';
 
 // READ
 export const getUser = async (req, res) => {
-  console.log('in get user controller');
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -21,14 +20,14 @@ export const getUserFriends = async (req, res) => {
       user.friends.map((id) => User.findById(id))
     );
     const formatedFriends = friends.map(
-      ({ _id, firstName, lastName, occupation, location, picturePAth }) => {
+      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
         return {
           _id,
           firstName,
           lastName,
           occupation,
           location,
-          picturePAth,
+          picturePath,
         };
       }
     );
@@ -56,9 +55,6 @@ export const addRemoveFriend = async (req, res) => {
       friend.friends.push(id);
     }
 
-    console.log(`user--------`, user);
-    console.log(`friend--------`, friend);
-
     await user.save();
     await friend.save();
 
@@ -66,14 +62,14 @@ export const addRemoveFriend = async (req, res) => {
       user.friends.map((id) => User.findById(id))
     );
     const formatedFriends = friends.map(
-      ({ _id, firstName, lastName, occupation, location, picturePAth }) => {
+      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
         return {
           _id,
           firstName,
           lastName,
           occupation,
           location,
-          picturePAth,
+          picturePath,
         };
       }
     );

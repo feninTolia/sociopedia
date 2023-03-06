@@ -7,11 +7,12 @@ export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
 
-    const result = cloudinary.uploader.upload(picturePath, {
-      folder: 'posts',
-    });
-
-    console.log(result);
+    const result = await cloudinary.uploader.upload(
+      `public/assets/${picturePath}`,
+      {
+        folder: 'posts',
+      }
+    );
 
     const user = await User.findById(userId);
     const newPost = new Post({
@@ -21,7 +22,7 @@ export const createPost = async (req, res) => {
       location: user.location,
       description,
       userPicturePath: user.picturePath,
-      picturePath,
+      picturePath: result.secure_url,
       likes: {},
       comments: [],
     });
@@ -30,7 +31,10 @@ export const createPost = async (req, res) => {
     const posts = await Post.find();
     res.status(201).json(posts);
   } catch (e) {
-    res.status(409).json({ msg: e.message });
+    console.log(e);
+    console.log(e.message);
+
+    res.status(409).json([]);
   }
 };
 
