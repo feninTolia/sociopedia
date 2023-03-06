@@ -1,10 +1,18 @@
 import Post from '../models/Post.js';
 import User from '../models/User.js';
+import cloudinary from '../utils/cloudinary.js';
 
 // CREATE
 export const createPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
+
+    const result = cloudinary.uploader.upload(picturePath, {
+      folder: 'posts',
+    });
+
+    console.log(result);
+
     const user = await User.findById(userId);
     const newPost = new Post({
       userId,
